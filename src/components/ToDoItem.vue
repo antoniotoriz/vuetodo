@@ -4,7 +4,6 @@
     <label v-bind:for="id">{{ label }}</label>
   </div>
 </template>
-
 <script>
 import uniqueId from 'lodash.uniqueid';
 
