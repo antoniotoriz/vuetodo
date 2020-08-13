@@ -10,7 +10,10 @@
           :done="item.done"
           :id="item.id"
           @checkbox-changed="updateDoneStatus(item.id)"
-        ></to-do-item>
+          @item-deleted="deleteToDo(item.id)"
+          @item-edited="editToDo(item.id, $event)"
+        >
+        </to-do-item>
       </li>
     </ul>
   </div>
@@ -26,6 +29,13 @@ export default {
   components: {
     ToDoItem,
     ToDoForm,
+  },
+  computed: {
+    listSummary() {
+      const numberFinishedItems = this.ToDoItems.filter((item) => item.done)
+        .length;
+      return `${numberFinishedItems} out of ${this.ToDoItems.length} items completed`;
+    },
   },
   data() {
     return {
@@ -54,12 +64,13 @@ export default {
       const toDoToUpdate = this.ToDoItems.find((item) => item.id === toDoId);
       toDoToUpdate.done = !toDoToUpdate.done;
     },
-  },
-  computed: {
-    listSummary() {
-      const numberFinishedItems = this.ToDoItems.filter((item) => item.done)
-        .length;
-      return `${numberFinishedItems} out of ${this.ToDoItems.length} items completed`;
+    deleteToDo(toDoId) {
+      const itemIndex = this.ToDoItems.findIndex((item) => item.id === toDoId);
+      this.ToDoItems.splice(itemIndex, 1);
+    },
+    editToDo(toDoId, newLabel) {
+      const toDoToEdit = this.ToDoItems.find((item) => item.id === toDoId);
+      toDoToEdit.label = newLabel;
     },
   },
 };
